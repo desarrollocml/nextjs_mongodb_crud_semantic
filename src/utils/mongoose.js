@@ -1,14 +1,20 @@
-import {connect, connection} from "mongoose"
+import { connect, connection } from "mongoose";
 
-export async function dbConnect(){
-    const db = await connect (process.env.MONGODB_URL);
-    console.log(db.connections[0].readyState);
+const conn = {
+    isConnected: false,//si no esta conectado se conecta
+};
+
+export async function dbConnect() {
+  if(conn.isConnected) return;  
+  const db = await connect(process.env.MONGODB_URL);
+  conn.isConnected = db.connections[0].readyState;
+  //console.log(db.connections[0].readyState);
 }
 
-connection.on("connected",()=>{
-    console.log("Mongo is connected")
-})
+connection.on("connected", () => {
+  console.log("Mongo is connected");
+});
 
-connection.on("error", (err)=>{
-    console.log(err)
-})
+connection.on("error", (err) => {
+  console.log(err);
+});
