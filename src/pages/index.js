@@ -1,6 +1,7 @@
 import styles from "../styles/Home.module.css";
 
-export default function Home() {
+export default function Home({tasks}) {
+  console.log(tasks);
   return (
     <div className={styles.container}>
       <h1>hola c</h1>
@@ -8,12 +9,12 @@ export default function Home() {
   );
 }
 
-export async function getServerSideProps() {
+ export async function getServerSideProps() {
   const res = await fetch("http://localhost:3000/api/tasks");
-  const task = await res.json();
+  const tasks = await res.json();
 
-  console.log(task);
+  console.log(tasks);
   return {
-    props: {},
+    props: {tasks},
   };
-}
+} 
