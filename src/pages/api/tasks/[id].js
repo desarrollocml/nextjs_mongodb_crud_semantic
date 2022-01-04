@@ -21,6 +21,17 @@ export default async (req, res) => {
       }
 
     case "PUT":
+      try {
+          const task = await Task.findByIdAndUpdate(id, body,{
+              new :true,
+              runValidators:true,
+          });
+          if(!task) return res.status(404).json({msg: "task not found"})
+          return res.status(200).json(task)
+          
+      } catch (error) {
+          return res.status(400).json({msg: error.message})
+      }  
 
     case "DELETE":
       try {
