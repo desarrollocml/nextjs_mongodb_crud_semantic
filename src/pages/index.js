@@ -26,7 +26,9 @@ export default function Home({ tasks }) {
             <h1>The are no taks yet</h1>
             <img src="https://img.freepik.com/vector-gratis/ningun-concepto-ilustracion-datos_108061-573.jpg?size=338&ext=jpg" />
             <div>
-              <Button>Create Task</Button>
+              <Button primary onClick={() => router.push("/tasks/new")}>
+                Create Task
+              </Button>
             </div>
           </Grid.Column>
         </Grid.Row>

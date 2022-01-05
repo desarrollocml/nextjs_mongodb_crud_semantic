@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 export default function TaskDetail({ task, error }) {
   const [confirm, setConfirm] = useState(false);
   const { query, push } = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const open = () => setConfirm(true);
   const close = () => setConfirm(false);
@@ -40,7 +41,7 @@ export default function TaskDetail({ task, error }) {
         <Grid.Column textAlign="center">
           <h1>{task.title}</h1>
           <p>{task.description}</p>
-          <Button color="red" onClick={open}>
+          <Button color="red" onClick={open} loading={isDeleting}>
             Delete
           </Button>
           <div></div>
