@@ -6,7 +6,10 @@ export default function TaskFormPage() {
     description: "",
   });
 
-  const [errors, setErrors]=useState({});
+  const [errors, setErrors]=useState({
+      title:"",
+      description:""
+  });
 
   const validate = ()=>{
       const errors = {};
@@ -41,13 +44,22 @@ export default function TaskFormPage() {
               placeholder="Title"
               name="title"
               onChange={handleChange} 
-              error={{content:'ddddd'}}
+              error={
+                  errors.title
+                  ?{content:"Please enter a title", pointing:"below"}
+                  :null
+              }
             />
             <Form.TextArea
               label="Description"
               placeholder="Description"
               name="description"
-              onChange={handleChange}
+              onChange={handleChange} 
+              error={
+                errors.description
+                ?{content: errors.description, pointing:"below"}
+                :null
+            }
             />
             <Button primary>Save</Button>
           </Form>
