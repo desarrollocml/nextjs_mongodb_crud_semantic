@@ -1,9 +1,33 @@
 import Error from "next/error";
+import { Button, Grid } from "semantic-ui-react";
 
-export default function TaskDetail({task, error}) {
+export default function TaskDetail({ task, error }) {
   if (error && error.statusCode)
-    return <Error statusCode = {error.statusCode} title={error.statusText} />
-    return <div>{JSON.stringify(task)}</div>
+    return <Error statusCode={error.statusCode} title={error.statusText} />;
+  return (
+    <Grid
+      centered
+      verticalAlign="middle"
+      columns="3"
+      style={{ height: "80vh" }}
+    >
+      <Grid.Row>
+        <Grid.Column textAlign="center">
+          <h1>{task.title}</h1>
+          <p>{task.description}</p>
+          <Button
+            color="red"
+            onClick={() => {
+              console.log(task._id);
+            }}
+          >
+            Delete
+          </Button>
+          <div></div>
+        </Grid.Column>
+      </Grid.Row>
+    </Grid>
+  );
 }
 
 export async function getServerSideProps({ query: { id } }) {
@@ -18,11 +42,11 @@ export async function getServerSideProps({ query: { id } }) {
     };
   }
   return {
-      props:{
-          error:{
-              statusCode : res.status,
-              statusText: "Invalid Id"
-          }
-      }
-  }
+    props: {
+      error: {
+        statusCode: res.status,
+        statusText: "Invalid Id",
+      },
+    },
+  };
 }

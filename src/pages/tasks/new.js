@@ -56,7 +56,7 @@ export default function TaskFormPage() {
       style={{ height: "80vh" }}
     >
       <Grid.Row>
-        <Grid.Column>
+        <Grid.Column textAlign="center">
           <h1>Create Task</h1>
           <Form onSubmit={handleSubmit}>
             <Form.Input
