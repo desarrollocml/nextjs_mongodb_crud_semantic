@@ -6,23 +6,38 @@ export default function TaskFormPage() {
     description: "",
   });
 
-  const [errors, setErrors]=useState({
-      title:"",
-      description:""
+  const [errors, setErrors] = useState({
+    title: "",
+    description: "",
   });
 
-  const validate = ()=>{
-      const errors = {};
-      if(!newTask.title) errors.title = "Title is required";
-      if(!newTask.description) errors.description = "Description is required";
-      return errors;
+  const validate = () => {
+    const errors = {};
+    if (!newTask.title) errors.title = "Title is required";
+    if (!newTask.description) errors.description = "Description is required";
+    return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let errors = validate()
-    if(Object.keys(errors).length) setErrors(errors)
-    console.log("submiting");
+    let errors = validate();
+    if (Object.keys(errors).length) setErrors(errors);
+    //console.log("submiting");
+    await createTask();
+  };
+
+  const createTask = async () => {
+    try {
+      await fetch("http://localhost:3000/api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleChange = (e) =>
@@ -43,23 +58,23 @@ export default function TaskFormPage() {
               label="Title"
               placeholder="Title"
               name="title"
-              onChange={handleChange} 
+              onChange={handleChange}
               error={
-                  errors.title
-                  ?{content:"Please enter a title", pointing:"below"}
-                  :null
+                errors.title
+                  ? { content: "Please enter a title", pointing: "below" }
+                  : null
               }
             />
             <Form.TextArea
               label="Description"
               placeholder="Description"
               name="description"
-              onChange={handleChange} 
+              onChange={handleChange}
               error={
                 errors.description
-                ?{content: errors.description, pointing:"below"}
-                :null
-            }
+                  ? { content: errors.description, pointing: "below" }
+                  : null
+              }
             />
             <Button primary>Save</Button>
           </Form>
