@@ -1,5 +1,5 @@
 import { Button, Form, Grid } from "semantic-ui-react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useRouter } from "next/router";
 
 export default function TaskFormPage() {
@@ -13,7 +13,17 @@ export default function TaskFormPage() {
     description: "",
   });
 
-  const router = useRouter();
+  const {query,push} = useRouter();
+
+  const getTask = async () => {
+    const res = await fetch("http://localhost:3000/api/tasks/" + query.id);
+    const data = await res.json();
+    setNewTask({ title: data.title, description: data.description });
+  };
+
+  useEffect(() => {
+    if (query.id) getTask();
+  }, []);
 
   const validate = () => {
     const errors = {};
@@ -27,8 +37,14 @@ export default function TaskFormPage() {
     let errors = validate();
     if (Object.keys(errors).length) setErrors(errors);
     //console.log("submiting");
-    await createTask();
-    await router.push("/");
+
+    if (query.id) {
+        await updateTask();
+      } else {
+        await createTask();
+      }
+  
+      await push("/");
   };
 
   const createTask = async () => {
@@ -45,6 +61,21 @@ export default function TaskFormPage() {
     }
   };
 
+  const updateTask = async () => {
+    try {
+      await fetch("http://localhost:3000/api/tasks/" + query.id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
   const handleChange = (e) =>
     setNewTask({ ...newTask, [e.target.name]: e.target.value });
 
@@ -57,13 +88,14 @@ export default function TaskFormPage() {
     >
       <Grid.Row>
         <Grid.Column textAlign="center">
-          <h1>Create Task</h1>
+          <h1>{!query.id ? "Create Task": "Update task"}</h1>
           <Form onSubmit={handleSubmit}>
             <Form.Input
               label="Title"
               placeholder="Title"
               name="title"
               onChange={handleChange}
+              value={newTask.title}
               error={
                 errors.title
                   ? { content: "Please enter a title", pointing: "below" }
@@ -75,13 +107,16 @@ export default function TaskFormPage() {
               placeholder="Description"
               name="description"
               onChange={handleChange}
+              value={newTask.description}
               error={
                 errors.description
                   ? { content: errors.description, pointing: "below" }
                   : null
               }
             />
-            <Button primary>Save</Button>
+            <Button primary type="submit">
+                {query.id ? "Update" : "Save"}
+            </Button>
           </Form>
         </Grid.Column>
       </Grid.Row>
