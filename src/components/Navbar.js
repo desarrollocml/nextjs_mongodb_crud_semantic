@@ -23,7 +23,7 @@ export function Navbar() {
             <Button
               size="mini"
               primary
-              /* onClick={() => router.push("/tasks/new")} */
+               onClick={() => router.push("/tasks/new")} 
             >
               New Task
             </Button>
